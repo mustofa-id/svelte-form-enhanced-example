@@ -9,7 +9,7 @@ export function enhance<T = unknown>(
 	options?: FormEnhanceOption<T>
 ): SvelteActionReturnType {
 	const { pending, result, xhr = new XMLHttpRequest() } = options ?? {};
-	let submiting = false;
+	let submitting = false;
 
 	function load() {
 		if (xhr.status >= 200 && xhr.status < 400) {
@@ -18,7 +18,7 @@ export function enhance<T = unknown>(
 		} else {
 			throw new Error(xhr.responseText);
 		}
-		submiting = false;
+		submitting = false;
 	}
 
 	function uploadProgress(e: ProgressEvent<EventTarget>) {
@@ -28,7 +28,7 @@ export function enhance<T = unknown>(
 
 	function submit(e: SubmitEvent) {
 		e.preventDefault();
-		if (submiting) return;
+		if (submitting) return;
 		try {
 			pending?.(form, 0);
 			xhr.open(form.method, form.action, true);
@@ -36,7 +36,7 @@ export function enhance<T = unknown>(
 			xhr.addEventListener('load', load);
 			xhr.upload.addEventListener('progress', uploadProgress);
 			xhr.send(new FormData(form));
-			submiting = true;
+			submitting = true;
 		} catch (e) {
 			console.error(e);
 			const err = e instanceof Error ? e : new Error(JSON.stringify(e))
