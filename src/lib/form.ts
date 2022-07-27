@@ -39,7 +39,8 @@ export function enhance<T = unknown>(
 			submiting = true;
 		} catch (e) {
 			console.error(e);
-			result?.(form, undefined, e as Error);
+			const err = e instanceof Error ? e : new Error(JSON.stringify(e))
+			result?.(form, undefined, err);
 		}
 	}
 
